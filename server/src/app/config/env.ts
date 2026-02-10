@@ -1,34 +1,38 @@
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config()
 
 interface EnvConfig {
-  PORT: string;
-  NODE_ENV: string;
-  DB_USER: string;
-  DB_PASS: string;
+    PORT: string,
+    DB_URL: string,
+    NODE_ENV: "development" | "production"
+    BCRYPT_SALT_ROUND: string
+    JWT_ACCESS_EXPIRES: string
+    JWT_ACCESS_SECRET: string
+    SUPER_ADMIN_EMAIL: string
+    SUPER_ADMIN_PASSWORD: string
 }
 
 const loadEnvVariables = (): EnvConfig => {
-  const requiredEnvVariables = [
-    "PORT",
-    "NODE_ENV",
-    "DB_USER",
-    "DB_PASS",
-  ];
+    const requiredEnvVariables: string[] = ["PORT", "DB_URL", "NODE_ENV", "BCRYPT_SALT_ROUND", "JWT_ACCESS_EXPIRES", "JWT_ACCESS_SECRET", "SUPER_ADMIN_EMAIL", "SUPER_ADMIN_PASSWORD"];
 
-  requiredEnvVariables.forEach((key) => {
-    if (!process.env[key]) {
-      throw new Error(`❌ Missing required env variable: ${key}`);
+    requiredEnvVariables.forEach(key => {
+        if (!process.env[key]) {
+            throw new Error(`Missing require environment variabl ${key}`)
+        }
+    })
+
+    return {
+        PORT: process.env.PORT as string,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        DB_URL: process.env.DB_URL!,
+        NODE_ENV: process.env.NODE_ENV as "development" | "production",
+        BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
+        JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET as string,
+        JWT_ACCESS_EXPIRES: process.env.JWT_ACCESS_EXPIRES as string,
+        SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
+        SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string
     }
-  });
+}
 
-  return {
-    PORT: process.env.PORT as string,
-    NODE_ENV: process.env.NODE_ENV as string,
-    DB_USER: process.env.DB_USER as string,
-    DB_PASS: process.env.DB_PASS as string,
-  };
-};
-
-export const envVars: EnvConfig = loadEnvVariables();
+export const envVars = loadEnvVariables()
